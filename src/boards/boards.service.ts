@@ -1,4 +1,4 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable, NotFoundException } from '@nestjs/common';
 import { v1 as uuid } from 'uuid';
 
 import { Board, BoardStatus } from './boards.model';
@@ -27,7 +27,13 @@ export class BoardsService {
   }
 
   getBoardById(id: string): Board {
-    return this.boards.find((board) => board.id === id);
+    const found = this.boards.find((board) => board.id === id);
+
+    if (!found) {
+      throw new NotFoundException(`Can't find Board with id ${id}`);
+    }
+
+    return found;
   }
 
   deleteBoard(id: string): void {
